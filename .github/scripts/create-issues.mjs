@@ -12,7 +12,7 @@ if (!fs.existsSync(issuesFile)) {
 const issues = JSON.parse(fs.readFileSync(issuesFile, 'utf8'));
 
 // Obtener el token de GitHub desde las variables de entorno
-const githubToken = process.env.GITHUB_TOKEN;
+const githubToken = process.env.TOKEN_GITHUB;
 if (!githubToken) {
   console.error("Error: GITHUB_TOKEN no está configurado.");
   process.exit(1);
