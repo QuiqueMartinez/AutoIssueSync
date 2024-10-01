@@ -38,7 +38,7 @@ jobs:
     # Ejecutar el análisis de Roslyn para generar `issues.json`
     - name: Run Code Analysis with Roslyn
       run: |
-        dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll ./AutoIssueSyncDemo
+        dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll ./AutoIssueSync
       env:
         TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
 
