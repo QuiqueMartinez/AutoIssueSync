@@ -31,6 +31,9 @@ namespace AutoIssueSync.Sync
             foreach (var type in types)
             {
                 var classAttributes = type.GetCustomAttributes<GitHubIssueAttribute>();
+
+                Console.WriteLine("Found " + classAttributes.Count() +" class attributes.");
+
                 foreach (var attribute in classAttributes)
                 {
                     await CreateOrUpdateIssue(githubClient, type.Name, attribute);
@@ -38,7 +41,11 @@ namespace AutoIssueSync.Sync
 
                 foreach (var method in type.GetMethods())
                 {
+
+
+
                     var methodAttributes = method.GetCustomAttributes<GitHubIssueAttribute>();
+                    Console.WriteLine("Found " + methodAttributes.Count() + " methodAttributes attributes.");
                     foreach (var attribute in methodAttributes)
                     {
                         await CreateOrUpdateIssue(githubClient, $"{type.Name}.{method.Name}", attribute);
