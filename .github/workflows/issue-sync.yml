@@ -3,10 +3,10 @@ name: AutoIssueSync Workflow
 on:
   push:
     branches:
-      - master
+      - master  # Cambia esto si usas otra rama principal
 
 jobs:
-  build:
+  analyze:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,15 +16,34 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0.x'  # Cambiado a .NET 6.0
+        dotnet-version: '6.0.x'
 
     - name: Restore dependencies
       run: dotnet restore
 
-    - name: Build AutoIssueSync.Sync
-      run: dotnet build AutoIssueSync.Sync/AutoIssueSync.Sync.csproj --configuration Release
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+    
+    - name: Install Dependencies
+      run: npm install @octokit/rest
+    
 
-    - name: Run GitHub Sync
-      env:  # Aquí es donde se define el secreto como variable de entorno
+    - name: Build AutoIssueSync.Analyzer
+      run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release
+
+    # Ejecutar el análisis de Roslyn para generar `issues.json`
+    - name: Run Code Analysis with Roslyn
+      run: |
+        dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll ./AutoIssueSyncDemo
+      env:
         TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
-      run: dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll
+
+    # Crear los issues en GitHub usando un script personalizado
+    - name: Create Issues Based on Analysis
+      run: |
+        echo "Creando issues basados en el archivo issues.json..."
+        node .github/scripts/create-issues.js
+      env:
+        TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
