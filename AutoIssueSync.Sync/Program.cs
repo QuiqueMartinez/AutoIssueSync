@@ -18,7 +18,7 @@ namespace AutoIssueSync.Sync
             var githubToken = Environment.GetEnvironmentVariable("TOKEN_GITHUB");
             if (string.IsNullOrEmpty(githubToken))
             {
-                Console.WriteLine("Error: GITHUB_TOKEN no está configurado.");
+                Console.WriteLine("Error: TOKEN_GITHUB no está configurado.");
                 return;
             }
 
