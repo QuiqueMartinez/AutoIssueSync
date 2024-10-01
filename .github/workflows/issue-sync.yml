@@ -29,6 +29,8 @@ jobs:
     - name: Install Dependencies
       run: npm install @octokit/rest
     
+    - name: List Directory Structure
+      run: ls -R
 
     - name: Build AutoIssueSync.Analyzer
       run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release
