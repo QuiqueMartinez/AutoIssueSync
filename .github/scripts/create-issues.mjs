@@ -1,5 +1,6 @@
-const fs = require('fs');
-const { Octokit } = require("@octokit/rest");
+// Cambiar `require` a `import` para ES Modules
+import { Octokit } from "@octokit/rest";
+import * as fs from 'fs';
 
 // Leer el archivo `issues.json`
 const issuesFile = './issues.json';

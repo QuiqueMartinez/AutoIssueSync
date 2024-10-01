@@ -46,6 +46,6 @@ jobs:
     - name: Create Issues Based on Analysis
       run: |
         echo "Creando issues basados en el archivo issues.json..."
-        node .github/scripts/create-issues.js
+        node .github/scripts/create-issues.mjs
       env:
         TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
