@@ -29,6 +29,11 @@ jobs:
     - name: Install Dependencies
       run: npm install @octokit/rest
     
+    # Instalar la dependencia `node-fetch`
+    - name: Install Node.js Dependencies
+      run: npm install node-fetch@2
+      
+
     - name: List Directory Structure
       run: ls -R
 
