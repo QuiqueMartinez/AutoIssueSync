@@ -1,6 +1,14 @@
-// Cambiar `require` a `import` para ES Modules
 import { Octokit } from "@octokit/rest";
+import fetch from 'node-fetch'; // Importar `node-fetch` para asignar `fetch`
 import * as fs from 'fs';
+
+// Configurar `fetch` en `Octokit`
+const octokit = new Octokit({
+  auth: process.env.TOKEN_GITHUB,
+  request: {
+    fetch: fetch // Asignar `node-fetch` como la implementación de `fetch`
+  }
+});
 
 // Leer el archivo `issues.json`
 const issuesFile = './issues.json';
@@ -10,16 +18,6 @@ if (!fs.existsSync(issuesFile)) {
 }
 
 const issues = JSON.parse(fs.readFileSync(issuesFile, 'utf8'));
-
-// Obtener el token de GitHub desde las variables de entorno
-const githubToken = process.env.TOKEN_GITHUB;
-if (!githubToken) {
-  console.error("Error: GITHUB_TOKEN no está configurado.");
-  process.exit(1);
-}
-
-// Configurar el cliente de GitHub usando el token
-const octokit = new Octokit({ auth: githubToken });
 
 // Datos del repositorio
 const owner = 'mi-usuario';  // Cambia esto por el nombre de tu usuario u organización
