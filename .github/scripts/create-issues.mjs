@@ -20,7 +20,7 @@ if (!fs.existsSync(issuesFile)) {
 const issues = JSON.parse(fs.readFileSync(issuesFile, 'utf8'));
 
 // Datos del repositorio
-const owner = 'mi-usuario';  // Cambia esto por el nombre de tu usuario u organización
+const owner = 'QuiqueMartinez';  // Cambia esto por el nombre de tu usuario u organización
 const repo = 'AutoIssueSync'; // Cambia esto por el nombre de tu repositorio
 
 // Crear los issues en GitHub basados en `issues.json`
