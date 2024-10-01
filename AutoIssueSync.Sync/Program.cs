@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using Octokit;  // Librería para interactuar con la API de GitHub
 using AutoIssueSync.Core;
 
