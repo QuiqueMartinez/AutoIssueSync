@@ -1,0 +1,28 @@
+name: AutoIssueSync Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'  # Cambiado a .NET 6.0
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build AutoIssueSync.Sync
+      run: dotnet build AutoIssueSync.Sync/AutoIssueSync.Sync.csproj --configuration Release
+
+    - name: Run GitHub Sync
+      run: dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll
