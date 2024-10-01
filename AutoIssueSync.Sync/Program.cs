@@ -11,7 +11,7 @@ namespace AutoIssueSync.Sync
             Console.WriteLine("Iniciando análisis de atributos y sincronización con GitHub...");
 
             // 1. Obtener el ensamblado del proyecto principal
-            var assembly = Assembly.Load("AutoIssueSync.Core");  // Carga del ensamblado principal
+            var assembly = Assembly.Load("AutoIssueSyncDemo");  // Carga del ensamblado principal
             var types = assembly.GetTypes();
 
             // 2. Crear un cliente de GitHub
