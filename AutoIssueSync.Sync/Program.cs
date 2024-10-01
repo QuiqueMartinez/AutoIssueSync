@@ -15,7 +15,7 @@ namespace AutoIssueSync.Sync
             var types = assembly.GetTypes();
 
             // 2. Crear un cliente de GitHub
-            var githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
+            var githubToken = Environment.GetEnvironmentVariable("TOKEN_GITHUB");
             if (string.IsNullOrEmpty(githubToken))
             {
                 Console.WriteLine("Error: GITHUB_TOKEN no está configurado.");
