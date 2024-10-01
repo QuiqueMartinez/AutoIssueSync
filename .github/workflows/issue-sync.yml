@@ -1,0 +1,30 @@
+name: AutoIssueSync Workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+
+    - name: Build and Run AutoIssueSync.Analyzer
+      run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release && dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll AutoIssueSync.Demo
+
+      env: 
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+
