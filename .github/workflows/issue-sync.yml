@@ -25,4 +25,6 @@ jobs:
       run: dotnet build AutoIssueSync.Sync/AutoIssueSync.Sync.csproj --configuration Release
 
     - name: Run GitHub Sync
+      env:  # Aquí es donde se define el secreto como variable de entorno
+        TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
       run: dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll
