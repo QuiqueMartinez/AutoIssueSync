@@ -55,13 +55,18 @@ class Program
 [GitHubIssue(IssueType.BUG, GitHubColumn.TODO, "Bug en el constructor.", "Este es un ejemplo de un bug en la clase de prueba.")]
 public class TestClass
 {
-    [GitHubIssue(IssueType.FEATURE, GitHubColumn.IN_PROGRESS, "Nueva característica:", "Implementar nueva característica en este método.")]
+    //[GitHubIssue(IssueType.FEATURE, GitHubColumn.IN_PROGRESS, "Nueva característica:", "Implementar nueva característica en este método.")]
     public void NewFeature()
     {
     }
 
     [GitHubIssue(IssueType.TASK, GitHubColumn.REVIEW, "Revisar implementación", "Revisar la implementación y optimizar el método.")]
     public void ReviewMethod()
+    {
+    }
+
+    [GitHubIssue(IssueType.TASK, GitHubColumn.REVIEW, "Otro revisar implementación", "Otro revisar la implementación y optimizar el método.")]
+    public void OtroReviewMethod()
     {
     }
 }
