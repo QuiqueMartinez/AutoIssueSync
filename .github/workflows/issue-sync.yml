@@ -30,6 +30,9 @@ jobs:
     - name: Move issues.json
       run: mv AutoIssueSync.Analyzer/issues.json issues.json
 
+    - name: List Directory Structure
+      run: ls -R /home/runner/work/AutoIssueSync
+
     # Construir el proyecto de sincronización
     - name: Build AutoIssueSync.Sync
       run: dotnet build AutoIssueSync.Sync/AutoIssueSync.Sync.csproj --configuration Release
