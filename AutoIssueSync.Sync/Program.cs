@@ -1,24 +1,53 @@
-﻿using System.Reflection;
-using Octokit;  // Librería para interactuar con la API de GitHub
-using AutoIssueSync.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Octokit;
 
 namespace AutoIssueSync.Sync
 {
     class Program
     {
-        static async System.Threading.Tasks.Task Main(string[] args)
+        // Clase para almacenar la información de cada issue detectado
+        public class IssueData
         {
-            Console.WriteLine("Iniciando análisis de atributos y sincronización con GitHub...");
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public string IssueType { get; set; }
+            public string MethodName { get; set; }
+            public string FilePath { get; set; }
+        }
 
-            // 1. Obtener el ensamblado del proyecto principal
-            var assembly = Assembly.Load("AutoIssueSync.Core");  // Carga del ensamblado principal
-            var types = assembly.GetTypes();
-
-            // 2. Crear un cliente de GitHub
-            var githubToken = Environment.GetEnvironmentVariable("TOKEN_GITHUB");
-            if (string.IsNullOrEmpty(githubToken))
+        static async Task Main(string[] args)
+        {
+            if (args.Length < 1)
             {
-                Console.WriteLine("Error: TOKEN_GITHUB no está configurado.");
+                Console.WriteLine("Uso: AutoIssueSync.Sync <ruta_issues_json>");
+                return;
+            }
+
+            // 1. Leer el archivo `issues.json` generado por `AutoIssueSync.Analyzer`
+            var issuesFilePath = args[0];
+            if (!File.Exists(issuesFilePath))
+            {
+                Console.WriteLine($"Error: No se encontró el archivo '{issuesFilePath}'");
+                return;
+            }
+
+            var issues = JsonConvert.DeserializeObject<List<IssueData>>(File.ReadAllText(issuesFilePath));
+            if (issues == null || !issues.Any())
+            {
+                Console.WriteLine("No se encontraron issues para procesar.");
+                return;
+            }
+
+            // 2. Configurar la autenticación en GitHub con `Octokit`
+            var githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
+            if (string.IsNullOrWhiteSpace(githubToken))
+            {
+                Console.WriteLine("Error: El token de GitHub no está configurado.");
                 return;
             }
 
@@ -27,50 +56,38 @@ namespace AutoIssueSync.Sync
                 Credentials = new Credentials(githubToken)
             };
 
-            // 3. Analizar las clases y métodos con atributos
-            foreach (var type in types)
+            // 3. Obtener el nombre del repositorio y el usuario dinámicamente desde variables de entorno de GitHub
+            string[] repoInfo = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY")?.Split('/') ?? new string[0];
+            if (repoInfo.Length != 2)
             {
-                var classAttributes = type.GetCustomAttributes<GitHubIssueAttribute>();
-
-                Console.WriteLine("Found " + classAttributes.Count() +" class attributes.");
-
-                foreach (var attribute in classAttributes)
-                {
-                    await CreateOrUpdateIssue(githubClient, type.Name, attribute);
-                }
-
-                foreach (var method in type.GetMethods())
-                {
-
-
-
-                    var methodAttributes = method.GetCustomAttributes<GitHubIssueAttribute>();
-                    Console.WriteLine("Found " + methodAttributes.Count() + " methodAttributes attributes.");
-                    foreach (var attribute in methodAttributes)
-                    {
-                        await CreateOrUpdateIssue(githubClient, $"{type.Name}.{method.Name}", attribute);
-                    }
-                }
+                Console.WriteLine("Error: No se pudo determinar el repositorio desde GITHUB_REPOSITORY.");
+                return;
             }
 
-            Console.WriteLine("Sincronización completa.");
-        }
+            string owner = repoInfo[0];
+            string repo = repoInfo[1];
 
-        // Función para crear o actualizar issues en GitHub basados en los atributos encontrados
-        static async System.Threading.Tasks.Task CreateOrUpdateIssue(GitHubClient client, string source, GitHubIssueAttribute attribute)
-        {
-            var owner = "mi-org";  // Reemplazar con tu usuario u organización
-            var repo = "AutoIssueSync"; // Reemplazar con tu repositorio
+            Console.WriteLine($"Procesando issues para el repositorio: {owner}/{repo}");
 
-            // Crear el issue en GitHub con los detalles del atributo
-            var newIssue = new NewIssue($"{attribute.title} ({source})")
+            // 4. Crear los issues en GitHub
+            foreach (var issue in issues)
             {
-                Body = $"Descripción: {attribute.description}\nTipo de Issue: {attribute.issueType}\nColumna Sugerida: {attribute.gitHubColumn}"
-            };
+                var newIssue = new NewIssue(issue.Title)
+                {
+                    Body = $"**Descripción**: {issue.Description}\n**Tipo de Issue**: {issue.IssueType}\n**Método Afectado**: {issue.MethodName}\n**Archivo**: {issue.FilePath}"
+                };
+                newIssue.Labels.Add(issue.IssueType);  // Añadir el tipo de issue como etiqueta
 
-            newIssue.Labels.Add(attribute.issueType.ToString()); // Agregar etiquetas de manera estándar
-            await client.Issue.Create(owner, repo, newIssue);
-            Console.WriteLine($"Issue '{newIssue.Title}' creado exitosamente en {repo}.");
+                try
+                {
+                    var createdIssue = await githubClient.Issue.Create(owner, repo, newIssue);
+                    Console.WriteLine($"Issue creado: {createdIssue.HtmlUrl}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al crear el issue '{issue.Title}': {ex.Message}");
+                }
+            }
         }
     }
 }
