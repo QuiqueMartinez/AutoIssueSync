@@ -24,11 +24,11 @@ jobs:
 
     # Construir el proyecto de análisis para generar el archivo `issues.json`
     - name: Build and Run AutoIssueSync.Analyzer
-      run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release && dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll .
+      run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release && dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll ./AutoIssueSyncDemo
 
     # Asegúrate de que el archivo `issues.json` esté en la ruta correcta
-    - name: Move issues.json
-      run: mv AutoIssueSync.Analyzer/issues.json issues.json
+    #- name: Move issues.json
+    #  run: mv AutoIssueSync.Analyzer/issues.json issues.json
 
     # Construir el proyecto de sincronización
     - name: Build AutoIssueSync.Sync
