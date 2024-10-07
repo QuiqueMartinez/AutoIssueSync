@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore
 
     - name: List Directory Structure
-      run: ls -R /home/runner/work/AutoIssueSync
+      run: ls -R /home/runner/work/AutoIssueSync/AutoIssueSyncDemo
 
     # Construir el proyecto de análisis para generar el archivo `issues.json`
     #- name: Build and Run AutoIssueSync.Analyzer
