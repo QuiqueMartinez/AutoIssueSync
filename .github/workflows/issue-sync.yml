@@ -21,6 +21,16 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
 
+    - name: Build AutoIssueSync.Analyzer
+      run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release
+
+    - name: Run Code Analysis with Roslyn
+      run: |
+        dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll ./AutoIssueSyncDemo
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+
+
     - name: Build AutoIssueSync.Sync
       run: dotnet build AutoIssueSync.Sync/AutoIssueSync.Sync.csproj --configuration Release
 
