@@ -23,13 +23,15 @@ jobs:
       run: dotnet restore
 
  
-    - name: List Directory Structure
-      run: ls -R /home/runner/work/AutoIssueSync
+
 
     # Construir el proyecto de análisis para generar el archivo `issues.json`
     - name: Build and Run AutoIssueSync.Analyzer
       run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release && dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll AutoIssueSync.Demo
     # Asegúrate de que el archivo `issues.json` esté en la ruta correcta
+
+    - name: List Directory Structure
+      run: ls -R /home/runner/work/AutoIssueSync
 
     # Construir el proyecto de sincronización
     - name: Build AutoIssueSync.Sync
@@ -37,7 +39,7 @@ jobs:
 
     # Ejecutar la sincronización de issues con GitHub
     - name: Run Issue Sync
-      run: dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll /home/runner/work/issues.json
+      run: dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll issues.json
       env: 
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
