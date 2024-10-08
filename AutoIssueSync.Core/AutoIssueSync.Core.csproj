@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="GitHub\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
+    <Compile Remove="GitHub\**" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="GitHub\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="GitHub\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="Services\**" />
   </ItemGroup>
 
 </Project>

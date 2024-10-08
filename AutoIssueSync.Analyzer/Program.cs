@@ -2,10 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+
 
 namespace AutoIssueSync.Analyzer
 {
@@ -54,7 +51,10 @@ namespace AutoIssueSync.Analyzer
             }
 
             // Guardar los resultados en un archivo JSON
-            var outputFile = "issues.json";
+
+
+            string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "issues.json");
+
             File.WriteAllText(outputFile, JsonConvert.SerializeObject(issues, Formatting.Indented));
             Console.WriteLine($"Análisis completado. Resultados guardados en {outputFile}");
         }

@@ -26,8 +26,8 @@ jobs:
       run: ls -R /home/runner/work/AutoIssueSync/AutoIssueSyncDemo
 
     # Construir el proyecto de análisis para generar el archivo `issues.json`
-    #- name: Build and Run AutoIssueSync.Analyzer
-    #  run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release && dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll /home/runner/work
+    - name: Build and Run AutoIssueSync.Analyzer
+      run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release && dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll AutoIssueSync/AutoIssueSync.Demo
     # Asegúrate de que el archivo `issues.json` esté en la ruta correcta
 
 
