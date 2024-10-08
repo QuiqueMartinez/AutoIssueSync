@@ -32,12 +32,12 @@ jobs:
     # Asegúrate de que el archivo `issues.json` esté en la ruta correcta
 
     # Construir el proyecto de sincronización
-    #- name: Build AutoIssueSync.Sync
-    #  run: dotnet build AutoIssueSync.Sync/AutoIssueSync.Sync.csproj --configuration Release
+    - name: Build AutoIssueSync.Sync
+      run: dotnet build AutoIssueSync.Sync/AutoIssueSync.Sync.csproj --configuration Release
 
     # Ejecutar la sincronización de issues con GitHub
-    #- name: Run Issue Sync
-    #  run: dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll /home/runner/work/issues.json
-    #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Run Issue Sync
+      run: dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll /home/runner/work/issues.json
+      env: 
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
