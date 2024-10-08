@@ -40,7 +40,7 @@ jobs:
     # Ejecutar la sincronización de issues con GitHub
     - name: Run Issue Sync
       run: pwd &
-           dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll ./AutoIssueSync/issues.json
+           dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll issues.json
       env: 
         GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
