@@ -60,7 +60,7 @@ public class TestClass
     {
     }
 
-    [GitHubIssue(IssueType.TASK, GitHubColumn.REVIEW, "Pending task", 
+    [GitHubIssue(IssueType.TASK, GitHubColumn.TODO, "Pending task", 
         "Optimize this method.")]
     public void ReviewMethod()
     {
