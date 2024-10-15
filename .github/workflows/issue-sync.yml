@@ -18,26 +18,19 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
-    # Restaurar dependencias
     - name: Restore dependencies
       run: dotnet restore
 
- 
 
-
-    # Construir el proyecto de análisis para generar el archivo `issues.json`
     - name: Build and Run AutoIssueSync.Analyzer
       run: dotnet build AutoIssueSync.Analyzer/AutoIssueSync.Analyzer.csproj --configuration Release && dotnet AutoIssueSync.Analyzer/bin/Release/net6.0/AutoIssueSync.Analyzer.dll AutoIssueSync.Demo
-    # Asegúrate de que el archivo `issues.json` esté en la ruta correcta
 
     - name: List Directory Structure
       run: ls -R /home/runner/work/AutoIssueSync
 
-    # Construir el proyecto de sincronización
     - name: Build AutoIssueSync.Sync
       run: dotnet build AutoIssueSync.Sync/AutoIssueSync.Sync.csproj --configuration Release
 
-    # Ejecutar la sincronización de issues con GitHub
     - name: Run Issue Sync
       run: pwd &
            dotnet AutoIssueSync.Sync/bin/Release/net6.0/AutoIssueSync.Sync.dll issues.json
