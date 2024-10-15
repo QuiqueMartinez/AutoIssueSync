@@ -5,26 +5,24 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Probando los atributos personalizados de AutoIssueSync...");
+        Console.WriteLine("Printing AutoIssueSync custom attributes");
 
-        // Crear una instancia de la clase de prueba y analizar sus atributos
         var testClassType = typeof(TestClass);
         AnalyzeAttributes(testClassType);
 
-        Console.WriteLine("\nPresiona cualquier tecla para salir...");
+        Console.WriteLine("\nPress any key to exit...");
         Console.ReadKey();
     }
 
-    // Función que usa reflexión para analizar los atributos de una clase o método
     static void AnalyzeAttributes(Type type)
     {
-        Console.WriteLine($"Analizando atributos de la clase: {type.Name}");
+        Console.WriteLine($"Analyzing class attributes: {type.Name}");
 
         // Obtener los atributos aplicados a la clase
         var classAttributes = type.GetCustomAttributes<GitHubIssueAttribute>();
         foreach (var attr in classAttributes)
         {
-            PrintAttributeInfo(attr, type.Name, "Clase");
+            PrintAttributeInfo(attr, type.Name, "Class");
         }
 
         // Obtener los métodos de la clase y sus atributos
@@ -33,7 +31,7 @@ class Program
             var methodAttributes = method.GetCustomAttributes<GitHubIssueAttribute>();
             foreach (var attr in methodAttributes)
             {
-                PrintAttributeInfo(attr, method.Name, "Método");
+                PrintAttributeInfo(attr, method.Name, "Method");
             }
         }
     }
@@ -42,29 +40,29 @@ class Program
     static void PrintAttributeInfo(GitHubIssueAttribute attribute, string elementName, string elementType)
     {
         Console.WriteLine($"{elementType}: {elementName}");
-        Console.WriteLine($"  - Tipo de Issue: {attribute.issueType}");
-        Console.WriteLine($"  - Columna de GitHub: {attribute.gitHubColumn}");
-        Console.WriteLine($"  - Título: {attribute.title}");
-        Console.WriteLine($"  - Descripción: {attribute.description}\n");
+        Console.WriteLine($"  - Issue type: {attribute.issueType}");
+        Console.WriteLine($"  - GitHub column: {attribute.gitHubColumn}");
+        Console.WriteLine($"  - Title: {attribute.title}");
+        Console.WriteLine($"  - Description: {attribute.description}\n");
     }
 }
 
-// Clase de prueba con atributos personalizados
-[GitHubIssue(IssueType.BUG, GitHubColumn.TODO, "Bug en el constructor.", "Este es un ejemplo de un bug en la clase de prueba.")]
+// Test class with custom attributes that will be converted into
+// Github issues
+
+[GitHubIssue(IssueType.BUG, GitHubColumn.TODO, "Bug in class.", 
+    "Example of how to convert a bug into an issue in the test class.")]
 public class TestClass
 {
-    //[GitHubIssue(IssueType.FEATURE, GitHubColumn.IN_PROGRESS, "Nueva característica:", "Implementar nueva característica en este método.")]
+    [GitHubIssue(IssueType.FEATURE, GitHubColumn.IN_PROGRESS, "MyNewFeature:", 
+        "Need to implement a new feature.")]
     public void NewFeature()
     {
     }
 
-    [GitHubIssue(IssueType.TASK, GitHubColumn.REVIEW, "Revisar implementación", "Revisar la implementación y optimizar el método.")]
+    [GitHubIssue(IssueType.TASK, GitHubColumn.REVIEW, "Pending task", 
+        "Optimize this method.")]
     public void ReviewMethod()
-    {
-    }
-
-    [GitHubIssue(IssueType.TASK, GitHubColumn.REVIEW, "Otro revisar implementación", "Otro revisar la implementación y optimizar el método.")]
-    public void OtroReviewMethod()
     {
     }
 }
