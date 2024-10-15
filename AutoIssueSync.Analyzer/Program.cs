@@ -12,11 +12,11 @@ namespace AutoIssueSync.Analyzer
         {
             if (args.Length < 1)
             {
-                Console.WriteLine("Uso: AutoIssueSync.Analyzer <ruta_proyecto>");
+                Console.WriteLine("Use: AutoIssueSync.Analyzer <project_path>");
                 return;
             }
 
-            // Ruta del proyecto a analizar (pasado como argumento)
+            // Get project's path as an argument
             var projectPath = args[0];
             var files = Directory.GetFiles(projectPath, "*.cs", SearchOption.AllDirectories);
 
