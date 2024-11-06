@@ -6,11 +6,11 @@ namespace AutoIssueSync.Core
     public sealed class GitHubIssueAttribute : Attribute
     {
         public IssueType issueType { get; }
-        public GitHubColumn gitHubColumn { get; }
+        public IssueStatus gitHubColumn { get; }
         public string title { get; }
         public string description { get; }
 
-        public GitHubIssueAttribute(IssueType issueType, GitHubColumn gitHubColumn, string title, string description)
+        public GitHubIssueAttribute(IssueType issueType, IssueStatus gitHubColumn, string title, string description)
         {
             this.issueType = issueType;
             this.gitHubColumn = gitHubColumn;

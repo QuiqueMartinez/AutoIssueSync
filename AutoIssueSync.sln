@@ -5,14 +5,9 @@ VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoIssueSync.Core", "AutoIssueSync.Core\AutoIssueSync.Core.csproj", "{C32AA38F-6130-4B5A-BDF2-DD93B96808DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoIssueSync.Sync", "AutoIssueSync.Sync\AutoIssueSync.Sync.csproj", "{8F7CBA18-AE06-4F50-A278-E0C9AA2BABB8}"
-	ProjectSection(ProjectDependencies) = postProject
-		{C32AA38F-6130-4B5A-BDF2-DD93B96808DD} = {C32AA38F-6130-4B5A-BDF2-DD93B96808DD}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoIssueSync.Analyzer", "AutoIssueSync.Analyzer\AutoIssueSync.Analyzer.csproj", "{7B249214-B788-4B53-B1B3-9D55F00A3CA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoIssueSync.Demo", "AutoIssueSync.Demo\AutoIssueSync.Demo.csproj", "{3CA96740-394F-47F9-8922-6E367E2D068E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoIssueSync.Demo", "AutoIssueSync.Demo\AutoIssueSync.Demo.csproj", "{3CA96740-394F-47F9-8922-6E367E2D068E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +19,6 @@ Global
 		{C32AA38F-6130-4B5A-BDF2-DD93B96808DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C32AA38F-6130-4B5A-BDF2-DD93B96808DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C32AA38F-6130-4B5A-BDF2-DD93B96808DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F7CBA18-AE06-4F50-A278-E0C9AA2BABB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F7CBA18-AE06-4F50-A278-E0C9AA2BABB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F7CBA18-AE06-4F50-A278-E0C9AA2BABB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F7CBA18-AE06-4F50-A278-E0C9AA2BABB8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7B249214-B788-4B53-B1B3-9D55F00A3CA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7B249214-B788-4B53-B1B3-9D55F00A3CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B249214-B788-4B53-B1B3-9D55F00A3CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU

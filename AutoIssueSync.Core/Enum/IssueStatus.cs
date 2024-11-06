@@ -1,8 +1,10 @@
 ﻿
 namespace AutoIssueSync.Core
 {
-    public enum GitHubColumn
+    public enum IssueStatus
     {
+        LOW_PRIORITY,
+        CRITICAL,
         TODO,          
         IN_PROGRESS,   
         REVIEW,        
