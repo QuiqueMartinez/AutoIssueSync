@@ -75,7 +75,7 @@ namespace AutoIssueSync
                 throw new ArgumentException("GitHubIssueAttribute must have four arguments: issueType, gitHubColumn, title, and description");
 
             var issueType = Enum.Parse<IssueType>(argumentList[0].ToString().Replace("IssueType.", "").Trim());
-            var gitHubColumn = Enum.Parse<Status>(argumentList[1].ToString().Replace("Status.", "").Trim());
+            var issueStatus = Enum.Parse<Status>(argumentList[1].ToString().Replace("IssueStatus.", "").Trim());
             string title = argumentList[2].ToString().Trim('"');
             string description = argumentList[3].ToString().Trim('"');
 
@@ -85,7 +85,7 @@ namespace AutoIssueSync
                 Title = title,
                 Description = description,
                 IssueType = issueType.ToString(),
-                GitHubColumn = gitHubColumn.ToString(),
+                IssueStatus = issueStatus.ToString(),
                 FilePath = filePath
             };
         }
@@ -159,7 +159,7 @@ namespace AutoIssueSync
             {
                 var newIssue = new NewIssue(issue.Title)
                 {
-                    Body = $"**Description**: {issue.Description}\n**Issue Type**: {issue.IssueType}\n**GitHub Column**: {issue.GitHubColumn}\n**Affected Method**: {issue.MethodName}\n**File**: {issue.FilePath}"
+                    Body = $"**Description**: {issue.Description}\n**Issue Type**: {issue.IssueType}\n**GitHub Column**: {issue.IssueStatus}\n**Affected Method**: {issue.MethodName}\n**File**: {issue.FilePath}"
                 };
                 newIssue.Labels.Add(issue.IssueType);
 
@@ -181,7 +181,7 @@ namespace AutoIssueSync
             public string Title { get; set; }
             public string Description { get; set; }
             public string IssueType { get; set; }
-            public string GitHubColumn { get; set; }
+            public string IssueStatus { get; set; }
             public string FilePath { get; set; }
         }
     }
