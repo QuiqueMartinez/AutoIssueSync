@@ -75,7 +75,7 @@ namespace AutoIssueSync
                 throw new ArgumentException("GitHubIssueAttribute must have four arguments: issueType, gitHubColumn, title, and description");
 
             var issueType = Enum.Parse<IssueType>(argumentList[0].ToString().Replace("IssueType.", "").Trim());
-            var issueStatus = Enum.Parse<Status>(argumentList[1].ToString().Replace("IssueStatus.", "").Trim());
+            var issueStatus = Enum.Parse<IssueStatus>(argumentList[1].ToString().Replace("IssueStatus.", "").Trim());
             string title = argumentList[2].ToString().Trim('"');
             string description = argumentList[3].ToString().Trim('"');
 
