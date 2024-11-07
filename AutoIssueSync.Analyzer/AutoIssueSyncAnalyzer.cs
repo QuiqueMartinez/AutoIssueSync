@@ -1,4 +1,9 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Octokit;
@@ -27,7 +32,6 @@ namespace AutoIssueSync
             }
 
             // Proceed with synchronization to GitHub
-            await RemoveAllExistingIssuesFromGitHub();
             await SyncIssuesWithGitHub(issues);
         }
 
@@ -43,6 +47,28 @@ namespace AutoIssueSync
                 var syntaxTree = CSharpSyntaxTree.ParseText(code);
                 var root = syntaxTree.GetRoot();
 
+                // Analyze class attributes
+                var classesWithAttributes = root.DescendantNodes()
+                    .OfType<ClassDeclarationSyntax>()
+                    .Where(cls => cls.AttributeLists
+                    .SelectMany(al => al.Attributes)
+                    .Any(attr => attr.Name.ToString().Contains("GitHubIssue")))
+                    .ToList();
+
+                foreach (var cls in classesWithAttributes)
+                {
+                    var attributes = cls.AttributeLists
+                        .SelectMany(al => al.Attributes)
+                        .Where(attr => attr.Name.ToString().Contains("GitHubIssue"));
+
+                    foreach (var attribute in attributes)
+                    {
+                        var issue = ParseGitHubIssueAttribute(attribute, cls.Identifier.ToString(), file);
+                        issues.Add(issue);
+                    }
+                }
+
+                // Analyze method attributes
                 var methodsWithAttributes = root.DescendantNodes()
                     .OfType<MethodDeclarationSyntax>()
                     .Where(method => method.AttributeLists
@@ -67,7 +93,7 @@ namespace AutoIssueSync
             return issues;
         }
 
-        static Issue ParseGitHubIssueAttribute(AttributeSyntax attribute, string methodName, string filePath)
+        static Issue ParseGitHubIssueAttribute(AttributeSyntax attribute, string elementName, string filePath)
         {
             var argumentList = attribute.ArgumentList?.Arguments.ToList();
 
@@ -81,7 +107,7 @@ namespace AutoIssueSync
 
             return new Issue
             {
-                MethodName = methodName,
+                MethodName = elementName, // Can be a class or method name
                 Title = title,
                 Description = description,
                 IssueType = issueType.ToString(),
@@ -90,7 +116,7 @@ namespace AutoIssueSync
             };
         }
 
-        static async Task RemoveAllExistingIssuesFromGitHub()
+        static async Task SyncIssuesWithGitHub(List<Issue> newIssues)
         {
             var githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
             if (string.IsNullOrWhiteSpace(githubToken))
@@ -114,63 +140,48 @@ namespace AutoIssueSync
             string owner = repoInfo[0];
             string repo = repoInfo[1];
 
-            Console.WriteLine($"Removing all existing issues for repository: {owner}/{repo}");
+            Console.WriteLine($"Processing issues for repository: {owner}/{repo}");
 
             var existingIssues = await githubClient.Issue.GetAllForRepository(owner, repo);
+
+            // 1. Mark issues as closed if not present in new issues
             foreach (var existingIssue in existingIssues)
             {
-                var issueUpdate = new IssueUpdate
+                if (existingIssue.Labels.Any(label => label.Name.Equals("closed", StringComparison.OrdinalIgnoreCase)) ||
+                    !newIssues.Any(ni => ni.Title == existingIssue.Title && ni.IssueType == existingIssue.Labels.FirstOrDefault()?.Name))
                 {
-                    State = ItemState.Closed
-                };
-
-                await githubClient.Issue.Update(owner, repo, existingIssue.Number, issueUpdate);
-                Console.WriteLine($"Issue closed: {existingIssue.HtmlUrl}");
-            }
-        }
-
-        static async Task SyncIssuesWithGitHub(List<Issue> issues)
-        {
-            var githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
-            if (string.IsNullOrWhiteSpace(githubToken))
-            {
-                Console.WriteLine("Error: GitHub token is not set.");
-                return;
-            }
-
-            var githubClient = new GitHubClient(new ProductHeaderValue("AutoIssueSync"))
-            {
-                Credentials = new Credentials(githubToken)
-            };
-
-            string[] repoInfo = Environment.GetEnvironmentVariable("GITHUB_REPOSITORY")?.Split('/') ?? new string[0];
-            if (repoInfo.Length != 2)
-            {
-                Console.WriteLine("Error: Could not determine repository from GITHUB_REPOSITORY.");
-                return;
-            }
-
-            string owner = repoInfo[0];
-            string repo = repoInfo[1];
-
-            Console.WriteLine($"Creating new issues for repository: {owner}/{repo}");
-
-            foreach (var issue in issues)
-            {
-                var newIssue = new NewIssue(issue.Title)
-                {
-                    Body = $"**Description**: {issue.Description}\n**Issue Type**: {issue.IssueType}\n**GitHub Column**: {issue.IssueStatus}\n**Affected Method**: {issue.MethodName}\n**File**: {issue.FilePath}"
-                };
-                newIssue.Labels.Add(issue.IssueType);
-
-                try
-                {
-                    var createdIssue = await githubClient.Issue.Create(owner, repo, newIssue);
-                    Console.WriteLine($"Issue created: {createdIssue.HtmlUrl}");
+                    var issueUpdate = new IssueUpdate
+                    {
+                        State = ItemState.Closed
+                    };
+                    await githubClient.Issue.Update(owner, repo, existingIssue.Number, issueUpdate);
+                    Console.WriteLine($"Issue closed: {existingIssue.HtmlUrl}");
                 }
-                catch (Exception ex)
+            }
+
+            // 2. Create or update issues that match
+            foreach (var newIssue in newIssues)
+            {
+                var existingIssue = existingIssues.FirstOrDefault(ei => ei.Title == newIssue.Title &&
+                                                                       ei.Labels.Any(label => label.Name == newIssue.IssueType));
+                if (existingIssue == null)
                 {
-                    Console.WriteLine($"Error creating issue '{issue.Title}': {ex.Message}");
+                    // Create new issue
+                    var issueToCreate = new NewIssue(newIssue.Title)
+                    {
+                        Body = $"**Description**: {newIssue.Description}\n**Issue Type**: {newIssue.IssueType}\n**GitHub Column**: {newIssue.IssueStatus}\n**Affected Method**: {newIssue.MethodName}\n**File**: {newIssue.FilePath}"
+                    };
+                    issueToCreate.Labels.Add(newIssue.IssueType);
+
+                    try
+                    {
+                        var createdIssue = await githubClient.Issue.Create(owner, repo, issueToCreate);
+                        Console.WriteLine($"Issue created: {createdIssue.HtmlUrl}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error creating issue '{newIssue.Title}': {ex.Message}");
+                    }
                 }
             }
         }
