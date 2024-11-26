@@ -54,12 +54,12 @@ class Program
     "Example of how to convert a bug into an issue in the test class.")]
 public class TestClass
 {
-    [GitHubIssue(IssueType.FEATURE, IssueStatus.IN_PROGRESS, "MyNewFeature:", "Need to implement a new feature.")]
+    [GitHubIssue(IssueType.FEATURE, IssueStatus.IN_PROGRESS, "MyNewFeature.", "Need to implement a new feature.")]
     public void NewFeature()
     {
     }
 
-    [GitHubIssue(IssueType.TASK, IssueStatus.STAGE, "Pending task", "Optimize this method.")]
+    [GitHubIssue(IssueType.TASK, IssueStatus.STAGE, "Pending task.", "Optimize this method.")]
     public void ReviewMethod()
     {
     }
