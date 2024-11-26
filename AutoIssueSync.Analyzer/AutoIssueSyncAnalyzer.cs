@@ -145,9 +145,11 @@ namespace AutoIssueSync
                 bool isClosed = existingIssue.Labels
                     .Any(label => label.Name.Equals("closed", StringComparison.OrdinalIgnoreCase));
 
+                /*bool isNotInUpdatedIssues = !updatedIssues
+                    .Any(updatedIssue => updatedIssue.MethodName == existingIssue.Title &&
+                                         updatedIssue.IssueType == existingIssue.Labels.FirstOrDefault()?.Name);*/
                 bool isNotInUpdatedIssues = !updatedIssues
-                    .Any(updatedIssue => updatedIssue.Title == existingIssue.Title &&
-                                         updatedIssue.IssueType == existingIssue.Labels.FirstOrDefault()?.Name);
+                    .Any(updatedIssue => updatedIssue.MethodName == existingIssue.Title);
 
                 if (isClosed || isNotInUpdatedIssues)
                 {
@@ -180,7 +182,7 @@ namespace AutoIssueSync
                     string updatedBody = $"**Description**: {updatedIssue.Description}\n" +
                                          $"**Issue Type**: {updatedIssue.IssueType}\n" +
                                          $"**GitHub Column**: {updatedIssue.IssueStatus}\n" +
-                                         $"**Affected Method**: {updatedIssue.MethodName}\n" +
+                                         $"**Affected Class/Method**: {updatedIssue.MethodName}\n" +
                                          $"**File**: {updatedIssue.FilePath}".Trim();
 
                     // If body and labels are the same, skip
@@ -215,7 +217,7 @@ namespace AutoIssueSync
                         Body = $"**Description**: {updatedIssue.Description}\n" +
                                $"**Issue Type**: {updatedIssue.IssueType}\n" +
                                $"**GitHub Column**: {updatedIssue.IssueStatus}\n" +
-                               $"**Affected Method**: {updatedIssue.MethodName}\n" +
+                               $"**Affected Class/Method**: {updatedIssue.MethodName}\n" +
                                $"**File**: {updatedIssue.FilePath}"
                     };
                     issueToCreate.Labels.Add(updatedIssue.IssueType);
@@ -257,12 +259,12 @@ namespace AutoIssueSync
 
         public class Issue
         {
-            public string MethodName { get; set; }
-            public string Title { get; set; }
-            public string Description { get; set; }
-            public string IssueType { get; set; }
-            public string IssueStatus { get; set; }
-            public string FilePath { get; set; }
+            public string MethodName { get; set; } = string.Empty;
+            public string Title { get; set; } = string.Empty;
+            public string Description { get; set; } = string.Empty;
+            public string IssueType { get; set; } = string.Empty;
+            public string IssueStatus { get; set; } = string.Empty;
+            public string FilePath { get; set; } = string.Empty;
         }
     }
 }
