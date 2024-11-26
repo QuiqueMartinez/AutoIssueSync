@@ -25,8 +25,14 @@
 2. **Run the tool**:
 
 Add attributes to classes or methods directly in the code. A git action triggers the utility to update the issues.
+
+
 ![Attributes](Images/Usage01.png)
+
+
 Access to the issues info directly in Github or in any issue tracker like VS Code extensions or GitKraken
+
+
 ![Attributes](Images/Usage02.png)
 ![Attributes](Images/Usage03.png)
 
