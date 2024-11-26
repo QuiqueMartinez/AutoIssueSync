@@ -20,7 +20,7 @@
 ## Usage
 
 1. **Set up environment variables**:
-   - `GITHUB_TOKEN`: A personal access token for GitHub with `repo` scope.
+   - `TOKEN_GITHUB`: A personal access token for GitHub with `repo` scope.
    - `GITHUB_REPOSITORY`: The target repository in the format `owner/repo`.
 
    Example:
