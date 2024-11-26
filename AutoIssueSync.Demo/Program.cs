@@ -50,16 +50,16 @@ class Program
 // Test class with custom attributes that will be converted into
 // Github issues
 
-[GitHubIssue(IssueType.BUG, IssueStatus.CRITICAL, "Bug in class.", 
+[GitHubIssue(IssueType.BUG, IssueStatus.CRITICAL, "Test bug in class.", 
     "Example of how to convert a bug into an issue in the test class.")]
 public class TestClass
 {
-    [GitHubIssue(IssueType.FEATURE, IssueStatus.IN_PROGRESS, "MyNewFeature.", "Need to implement a new feature.")]
+    [GitHubIssue(IssueType.FEATURE, IssueStatus.IN_PROGRESS, "Test New Feature.", "Need to implement a new feature.")]
     public void NewFeature()
     {
     }
 
-    [GitHubIssue(IssueType.TASK, IssueStatus.STAGE, "Pending task.", "Optimize this method.")]
+    [GitHubIssue(IssueType.TASK, IssueStatus.STAGE, "Test Pending task.", "Optimize this method.")]
     public void ReviewMethod()
     {
     }
