@@ -101,8 +101,7 @@ namespace AutoIssueSync
 
             return new Issue
             {
-                MethodName = elementName, // Can be a class or method name
-                Title = title,
+                ClassOrMethodName = elementName, // Can be a class or method name
                 Description = description,
                 IssueType = issueType.ToString(),
                 IssueStatus = issueStatus.ToString(),
@@ -141,15 +140,10 @@ namespace AutoIssueSync
             // 1. Mark issues as closed if not present in updated issues
             foreach (var existingIssue in existingIssues)
             {
-                // Check if the issue is closed or not present in the updated issues
-                bool isClosed = existingIssue.Labels
-                    .Any(label => label.Name.Equals("closed", StringComparison.OrdinalIgnoreCase));
-
                 bool isNotInUpdatedIssues = !updatedIssues
-                    .Any(updatedIssue => updatedIssue.Title == existingIssue.Title &&
-                                         updatedIssue.IssueType == existingIssue.Labels.FirstOrDefault()?.Name);
+                    .Any(updatedIssue => updatedIssue.ClassOrMethodName == existingIssue.Title);
 
-                if (isClosed || isNotInUpdatedIssues)
+                if (isNotInUpdatedIssues)
                 {
                     // Close the issue on GitHub
                     var issueUpdate = new IssueUpdate
@@ -159,39 +153,32 @@ namespace AutoIssueSync
 
                     await githubClient.Issue.Update(owner, repo, existingIssue.Number, issueUpdate);
 
-                    // Log the closed issue in the console
                     Console.WriteLine($"Issue closed: {existingIssue.HtmlUrl}");
                 }
             }
 
-
             // 2. Create or update issues that match
             foreach (var updatedIssue in updatedIssues)
             {
-                // Find an existing issue based on the method or class it belongs to
                 var existingIssue = existingIssues.FirstOrDefault(ei =>
-                    ei.Body?.Contains(updatedIssue.MethodName) == true); // Match based on method or class
-
+                    ei.Body?.Contains(updatedIssue.ClassOrMethodName) == true);
 
                 if (existingIssue != null)
                 {
-                    // Check if the issue content matches completely
                     string existingBody = existingIssue.Body?.Trim() ?? string.Empty;
                     string updatedBody = $"**Description**: {updatedIssue.Description}\n" +
                                          $"**Issue Type**: {updatedIssue.IssueType}\n" +
                                          $"**GitHub Column**: {updatedIssue.IssueStatus}\n" +
-                                         $"**Affected Method**: {updatedIssue.MethodName}\n" +
+                                         $"**Affected Class/Method**: {updatedIssue.ClassOrMethodName}\n" +
                                          $"**File**: {updatedIssue.FilePath}".Trim();
 
-                    // If body and labels are the same, skip
-                    var labelsMatch = existingIssue.Labels.Any(label => label.Name == updatedIssue.IssueType);
+                    bool labelsMatch = existingIssue.Labels.Any(label => label.Name == updatedIssue.IssueType);
                     if (existingBody == updatedBody && labelsMatch)
                     {
                         Console.WriteLine($"Issue skipped (no changes): {existingIssue.HtmlUrl}");
                         continue;
                     }
 
-                    // Update the issue if the content differs
                     var issueUpdate = new IssueUpdate
                     {
                         Body = updatedBody
@@ -204,18 +191,17 @@ namespace AutoIssueSync
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error updating issue '{updatedIssue.Title}': {ex.Message}");
+                        Console.WriteLine($"Error updating issue '{updatedIssue.ClassOrMethodName}': {ex.Message}");
                     }
                 }
                 else
                 {
-                    // Create a new issue if no match is found
-                    var issueToCreate = new NewIssue(updatedIssue.Title)
+                    var issueToCreate = new NewIssue(updatedIssue.ClassOrMethodName)
                     {
                         Body = $"**Description**: {updatedIssue.Description}\n" +
                                $"**Issue Type**: {updatedIssue.IssueType}\n" +
                                $"**GitHub Column**: {updatedIssue.IssueStatus}\n" +
-                               $"**Affected Method**: {updatedIssue.MethodName}\n" +
+                               $"**Affected Class/Method**: {updatedIssue.ClassOrMethodName}\n" +
                                $"**File**: {updatedIssue.FilePath}"
                     };
                     issueToCreate.Labels.Add(updatedIssue.IssueType);
@@ -227,42 +213,19 @@ namespace AutoIssueSync
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error creating issue '{updatedIssue.Title}': {ex.Message}");
+                        Console.WriteLine($"Error creating issue '{updatedIssue.ClassOrMethodName}': {ex.Message}");
                     }
-                }
-            }
-
-            // Close issues not present in the updated issues
-            foreach (var existingIssue in existingIssues)
-            {
-                bool isClosed = existingIssue.Labels
-                    .Any(label => label.Name.Equals("closed", StringComparison.OrdinalIgnoreCase));
-
-                bool isNotInUpdatedIssues = !updatedIssues.Any(updatedIssue =>
-                    updatedIssue.Title == existingIssue.Title &&
-                    updatedIssue.IssueType == existingIssue.Labels.FirstOrDefault()?.Name);
-
-                if (isClosed || isNotInUpdatedIssues)
-                {
-                    var issueUpdate = new IssueUpdate
-                    {
-                        State = ItemState.Closed
-                    };
-
-                    await githubClient.Issue.Update(owner, repo, existingIssue.Number, issueUpdate);
-                    Console.WriteLine($"Issue closed: {existingIssue.HtmlUrl}");
                 }
             }
         }
 
         public class Issue
         {
-            public string MethodName { get; set; }
-            public string Title { get; set; }
-            public string Description { get; set; }
-            public string IssueType { get; set; }
-            public string IssueStatus { get; set; }
-            public string FilePath { get; set; }
+            public string ClassOrMethodName { get; set; } = string.Empty;
+            public string Description { get; set; } = string.Empty;
+            public string IssueType { get; set; } = string.Empty;
+            public string IssueStatus { get; set; } = string.Empty;
+            public string FilePath { get; set; } = string.Empty;
         }
     }
 }
