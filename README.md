@@ -1,8 +1,9 @@
 # AutoIssueSync
-
-**AutoIssueSync** is a command-line tool for automating the synchronization of project issues with GitHub. This tool analyzes `.cs` files in a C# project, identifies attributes tagged with `GitHubIssue`, and ensures that the corresponding issues in a GitHub repository are created, updated, or closed based on the current state of the codebase.
-**IMPORTANT** The objective of this utility is to manage all issues' lifecycles through code attributes. It may have undesired effects on issues created manually in Github.
 ---
+*AutoIssueSync* is a command-line tool for automating the synchronization of project issues with GitHub. This tool analyzes `.cs` files in a C# project, identifies attributes tagged with `GitHubIssue`, and ensures that the corresponding issues in a GitHub repository are created, updated, or closed based on the current state of the codebase.
+
+**IMPORTANT!!** The objective of this utility is to manage all issues' lifecycles through code attributes. It may have undesired effects on issues created manually in Github.
+
 
 ## Features
 
