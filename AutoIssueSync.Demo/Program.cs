@@ -59,7 +59,7 @@ public class TestClass
     {
     }
 
-    [GitHubIssue(IssueType.TASK, IssueStatus.STAGE, "Pending task", "Optimize this method.")]
+    [GitHubIssue(IssueType.TASK, IssueStatus.STAGE, "Pending task.", "Optimize this method.")]
     public void ReviewMethod()
     {
     }
