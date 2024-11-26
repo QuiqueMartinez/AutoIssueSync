@@ -21,13 +21,6 @@
 
 1. **Set up environment variables**:
    - `TOKEN_GITHUB`: A personal access token for GitHub with `repo` scope.
-   - `GITHUB_REPOSITORY`: The target repository in the format `owner/repo`.
-
-   Example:
-   ```bash
-   export GITHUB_TOKEN=your_personal_access_token
-   export GITHUB_REPOSITORY=owner/repo
-   ```
 
 2. **Run the tool**:
 
