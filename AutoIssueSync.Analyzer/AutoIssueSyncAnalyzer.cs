@@ -169,7 +169,7 @@ namespace AutoIssueSync
                     string updatedBody = $"**Description**: {updatedIssue.Description}\n" +
                                          $"**Issue Type**: {updatedIssue.IssueType}\n" +
                                          $"**GitHub Column**: {updatedIssue.IssueStatus}\n" +
-                                         $"**Affected Class/Method**: {updatedIssue.ClassOrMethodName}\n" +
+                                         //$"**Affected Class/Method**: {updatedIssue.ClassOrMethodName}\n" +
                                          $"**File**: {updatedIssue.FilePath}".Trim();
 
                     bool labelsMatch = existingIssue.Labels.Any(label => label.Name == updatedIssue.IssueType);
@@ -201,7 +201,7 @@ namespace AutoIssueSync
                         Body = $"**Description**: {updatedIssue.Description}\n" +
                                $"**Issue Type**: {updatedIssue.IssueType}\n" +
                                $"**GitHub Column**: {updatedIssue.IssueStatus}\n" +
-                               $"**Affected Class/Method**: {updatedIssue.ClassOrMethodName}\n" +
+                               //$"**Affected Class/Method**: {updatedIssue.ClassOrMethodName}\n" +
                                $"**File**: {updatedIssue.FilePath}"
                     };
                     issueToCreate.Labels.Add(updatedIssue.IssueType);
