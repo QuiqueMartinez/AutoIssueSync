@@ -50,7 +50,7 @@ class Program
 // Test class with custom attributes that will be converted into
 // Github issues
 
-[GitHubIssue(IssueType.BUG, IssueStatus.TODO, "Bug in class.", 
+[GitHubIssue(IssueType.BUG, IssueStatus.STAGE, "Bug in class.", 
     "Example of how to convert a bug into an issue in the test class.")]
 public class TestClass
 {
@@ -60,7 +60,7 @@ public class TestClass
     {
     }
 
-    [GitHubIssue(IssueType.TASK, IssueStatus.TODO, "Pending task", 
+    [GitHubIssue(IssueType.TASK, IssueStatus.STAGE, "Pending task", 
         "Optimize this method.")]
     public void ReviewMethod()
     {
