@@ -2,7 +2,7 @@
 ---
 *AutoIssueSync* is a command-line tool for automating the synchronization of project issues with GitHub. This tool analyzes `.cs` files in a C# project, identifies attributes tagged with `GitHubIssue`, and ensures that the corresponding issues in a GitHub repository are created, updated, or closed based on the current state of the codebase.
 
-**IMPORTANT!!** The objective of this utility is to manage all issues' lifecycles through code attributes. It may have undesired effects on issues created manually in Github.
+**IMPORTANT!!** The objective of this utility is to manage all issues' lifecycles through code attributes, pointing to concrete classes or methods. It may have undesired effects on issues created manually in Github.
 
 
 ## Features
@@ -30,11 +30,12 @@
    ```
 
 2. **Run the tool**:
-   ```bash
-   dotnet run -- <project_path>
-   ```
 
-   Replace `<project_path>` with the path to your C# project directory.
+Add attributes to classes or methods directly in the code. A git action triggers the utility to update the issues.
+![Attributes](Images/Usage01.png)
+Access to the issues info directly in Github or in any issue tracker like VS Code extensions or GitKraken
+![Attributes](Images/Usage02.png)
+![Attributes](Images/Usage03.png)
 
 3. **Check the output**:
    - The tool will log the synchronization process to the console, including created, updated, and closed issues.
