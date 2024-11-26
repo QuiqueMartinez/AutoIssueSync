@@ -111,7 +111,7 @@ namespace AutoIssueSync
 
         static async Task SyncIssuesWithGitHub(List<Issue> updatedIssues)
         {
-            var githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN");
+            var githubToken = Environment.GetEnvironmentVariable("TOKEN_GITHUB");
             if (string.IsNullOrWhiteSpace(githubToken))
             {
                 Console.WriteLine("Error: GitHub token is not set.");

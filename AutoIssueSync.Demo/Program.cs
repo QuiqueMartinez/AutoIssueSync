@@ -50,11 +50,11 @@ class Program
 // Test class with custom attributes that will be converted into
 // Github issues
 
-[GitHubIssue(IssueType.BUG, IssueStatus.CRITICAL, "Test: bug in class.", 
+[GitHubIssue(IssueType.BUG, IssueStatus.CRITICAL, "Test. Bug in class.", 
     "Example of how to convert a bug into an issue in the test class.")]
 public class TestClass
 {
-    [GitHubIssue(IssueType.FEATURE, IssueStatus.IN_PROGRESS, "Test New Feature.", "Need to implement a new feature.")]
+    [GitHubIssue(IssueType.FEATURE, IssueStatus.IN_PROGRESS, "Test. New Feature.", "Need to implement a new feature.")]
     public void NewFeature()
     {
     }
